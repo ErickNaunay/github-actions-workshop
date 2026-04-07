@@ -91,6 +91,8 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-workshop:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-workshop:${{ github.sha }}            
           labels: ${{ steps.meta.outputs.labels }}
   
