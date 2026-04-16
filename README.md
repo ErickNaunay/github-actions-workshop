@@ -1,7 +1,7 @@
 # GitHub Actions Workshop  
 **CI, Docker, Docker Hub y despliegue por ambientes con Render**
 
-Este repositorio fue creado como base práctica para aprender los fundamentos de **CI/CD** usando una aplicación sencilla en Python. El objetivo del workshop es entender cómo un cambio en código pasa por validaciones automáticas, se empaqueta como imagen Docker, se publica en un registry y finalmente se despliega en distintos ambientes.aa
+Este repositorio fue creado como base práctica para aprender los fundamentos de **CI/CD** usando una aplicación sencilla en Python. El objetivo del workshop es entender cómo un cambio en código pasa por validaciones automáticas, se empaqueta como imagen Docker, se publica en un registry y finalmente se despliega en distintos ambientes.aaa
 
 Al finalizar el workshop, el flujo completo debe permitir:
 
