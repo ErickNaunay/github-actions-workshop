@@ -3,7 +3,7 @@
 
 Este repositorio fue creado como base práctica para aprender los fundamentos de **CI/CD** usando una aplicación sencilla en Python. El objetivo del workshop es entender cómo un cambio en código pasa por validaciones automáticas, se empaqueta como imagen Docker, se publica en un registry y finalmente se despliega en distintos ambientes.aaa
 
-Al finalizar el workshop, el flujo completo debe permitir:
+Al afinalizar el workshop, el flujo completo debe permitir:
 
 - validar código con **lint**,
 - ejecutar **tests automáticos**,
