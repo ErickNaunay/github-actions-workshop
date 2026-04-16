@@ -1,25 +1,21 @@
 name: CICD
 
-# Triggers
 on:
   push:
     branches:
-      - master
+      - main
     tags:
       - "v*"
   pull_request:
 
-# Jobs
-# Con una misma tuberia CI se pueden validar multiples confg. de entornos de ejecucion.
 jobs:
   lint:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - name: Set up python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v4
         with:
           python-version: "3.11"
       - name: Install dependencies
@@ -30,71 +26,63 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: lint
-
     strategy:
       matrix:
         python-version: ["3.10", "3.13"]
-    
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - name: Set up python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run tests
         run: pytest
-  
+
   docker-build:
     runs-on: ubuntu-latest
     needs: test
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - name: Build docker image
         run: docker build -t github-actions-workshop:latest .
-  
+
   docker-push:
     runs-on: ubuntu-latest
     needs: docker-build
-
     if: github.event_name == 'push'
-
     permissions:
       contents: read
-    
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
       - name: Login in Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Extract Docker metadata
         id: extract_metadata
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-workshop
+          images: ${{ secrets.DOCKERHUB_USER }}/github-actions-workshop
           tags: |
             type=raw,value=latest
             type=raw,value=main,enable={{is_default_branch}}
             type=ref,event=tag
             type=sha
-      - name: Print generated tags
-        run: echo "${{ steps.meta.outputs.tags }}"
       - name: Build & Push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           platforms: linux/amd64
-          tags: ${{ steps.extract_metadata.outputs.tags }}            
+          tags: ${{ steps.extract_metadata.outputs.tags }}
           labels: ${{ steps.extract_metadata.outputs.labels }}
-  
+
   deploy-prod:
     runs-on: ubuntu-latest
     needs: docker-push
@@ -102,7 +90,3 @@ jobs:
     steps:
       - name: Trigger render PROD deploy
         run: curl -X POST "${{ secrets.RENDER_PROD_DEPLOY_HOOK }}"
-  
-  deploy-push-dev:
-  deploy-dev:
-  
